@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enerzal Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/chat-styles.css">
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand text-danger fw-bold" href="/index.html">ENERZAL</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/pages/features.html">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/pages/pricing.html">Pricing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/pages/about.html">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/pages/contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Chat Interface -->
+    <div class="container-fluid vh-100 d-flex flex-column">
+        <div class="row flex-grow-1 w-100">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-light sidebar">
+                <!-- Placeholder for sidebar menu items -->
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+                <div class="sidebar-item"></div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="col-md-10 d-flex flex-column justify-content-between">
+                <!-- Chat Bubbles Section -->
+                <div class="row w-100 h-85 d-flex justify-content-around align-items-center flex-grow-1">
+                    <!-- Chat Bubbles -->
+                    <div class="col-md-3 chat-bubble">
+                        <h5>Leave Policies</h5>
+                        <p>"Could you explain the company's leave policies?"</p>
+                    </div>
+                    <div class="col-md-3 chat-bubble">
+                        <h5>Technical Issue Resolution</h5>
+                        <p>"What is the standard procedure when an employee encounters a technical issue?"</p>
+                    </div>
+                    <div class="col-md-3 chat-bubble">
+                        <h5>Celebration of Milestones</h5>
+                        <p>"How does the company celebrate major milestones?"</p>
+                    </div>
+                </div>
+
+                <!-- Chat Input Section -->
+                <div class="chat-input w-100 p-3 bg-light d-flex align-items-center">
+                    <input type="text" class="form-control me-3" placeholder="Message ENERZAL">
+                    <button class="btn btn-danger">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
