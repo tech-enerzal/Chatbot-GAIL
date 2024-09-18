@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enerzal Chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/chat-styles.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Enerzal Chat</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/chat-styles.css"> <!-- Link to external CSS file -->
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/chat.js"></script>
+        
+    </head>
+    
 <body>
     <header>
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand text-danger fw-bold" href="/index.html">ENERZAL</a>
@@ -18,173 +23,67 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/pages/features.html">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/pages/pricing.html">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/pages/about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/pages/contact.html">Contact</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" href="/pages/features.html">Features</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/pages/pricing.html">Pricing</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/pages/about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/pages/contact.html">Contact</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Main Container -->
     <div class="container-fluid d-flex flex-column vh-100">
-        <!-- Sidebar and Chat Area -->
         <div class="row flex-grow-1">
-            <!-- Sidebar -->
-            <div class="col-md-2 bg-light sidebar d-flex flex-column p-3">
-                <!-- Sidebar placeholder (adjusted with rounded elements) -->
-                <div class="mb-3 rounded bg-secondary" style="height: 50px;"></div>
-                <div class="mb-3 rounded bg-secondary" style="height: 50px;"></div>
-                <div class="mb-3 rounded bg-secondary" style="height: 50px;"></div>
-                <div class="mb-3 rounded bg-secondary" style="height: 50px;"></div>
-                <div class="mb-3 rounded bg-secondary" style="height: 50px;"></div>
+            <div class="col-md-2 sidebar d-flex flex-column p-3">
+                <h5>Chat History</h5>
+                <div id="chatHistory" class="recent-searches flex-grow-1 overflow-auto"></div>
             </div>
 
-            <!-- Chat Area -->
             <div class="col-md-10 d-flex flex-column">
-                <!-- Logo at the Top -->
-                <div class="my-4 text-center">
-                    <img src="/assests/logo.jpg" alt="Enerzal Logo" class="logo">
+                <div class="chat-bubbles flex-grow-1 overflow-auto p-4" id="chatBubbles">
+                    <!-- Logo -->
+                    <div id="logo" class="text-center mb-3">
+                        <img src="/assests/ENERZAL_LOGO.jpg" alt="Logo" class="logo">
+                    </div>
+
+                    <!-- Initial Chat Bubbles -->
+                    <div class="d-flex justify-content-center mb-3 initial-bubbles">
+                        <div class="chat-bubble chat-bubble-assistant shadow-sm text-center mx-2" data-message="Could you explain the company's leave policies?">
+                            <h5>Leave Policies</h5>
+                            <p>"Could you explain the company's leave policies?"</p>
+                        </div>
+                        <div class="chat-bubble chat-bubble-assistant shadow-sm text-center mx-2" data-message="What is the standard procedure when an employee encounters a technical issue?">
+                            <h5>Technical Issue Resolution</h5>
+                            <p>"What is the standard procedure when an employee encounters a technical issue?"</p>
+                        </div>
+                        <div class="chat-bubble chat-bubble-assistant shadow-sm text-center mx-2" data-message="How does the company celebrate major milestones?">
+                            <h5>Celebration of Milestones</h5>
+                            <p>"How does the company celebrate major milestones?"</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Initial Chat Bubbles Section -->
-                <div id="initial-chat-bubbles" class="d-flex justify-content-between mb-3">
-                    <div class="chat-bubble clickable" onclick="startConversation('Leave Policies', 'Could you explain the company\'s leave policies?')">
-                        <h5>Leave Policies</h5>
-                        <p>"Could you explain the company's leave policies?"</p>
-                    </div>
-                    <div class="chat-bubble clickable" onclick="startConversation('Technical Issue Resolution', 'What is the standard procedure when an employee encounters a technical issue?')">
-                        <h5>Technical Issue Resolution</h5>
-                        <p>"What is the standard procedure when an employee encounters a technical issue?"</p>
-                    </div>
-                    <div class="chat-bubble clickable" onclick="startConversation('Celebration of Milestones', 'How does the company celebrate major milestones?')">
-                        <h5>Celebration of Milestones</h5>
-                        <p>"How does the company celebrate major milestones?"</p>
-                    </div>
-                </div>
-
-                <!-- Chat Bubbles Section -->
-                <div id="chat-bubbles" class="chat-bubbles flex-grow-1 overflow-auto p-4">
-                </div>
-
-                <!-- Chat Input Section -->
-                <div class="chat-input">
+                <div class="chat-input bg-light p-3">
                     <div class="container">
-                        <div class="d-flex">
-                            <input type="text" class="form-control me-3" placeholder="Message ENERZAL">
-                            <button class="btn btn-danger">Send</button>
+                        <div class="d-flex align-items-center position-relative">
+                            <!-- Upload Button -->
+                            <label for="fileUpload" class="btn btn-upload me-3">
+                                <i class="bi bi-upload"></i>
+                                <span class="btn-upload-text">Upload</span>
+                            </label>
+                            <input type="file" id="fileUpload" accept=".txt, .pdf, .docx" style="display: none;" />
+                            
+                            <!-- Text Input Field -->
+                            <input type="text" class="form-control me-3" placeholder="Ask Enerzal" id="userInput" />
+                            
+                            <!-- Send Button -->
+                            <button class="btn btn-danger" id="sendButton">Send</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const inputField = document.querySelector(".chat-input input");
-    const sendButton = document.querySelector(".chat-input button");
-    const chatArea = document.querySelector("#chat-bubbles");
-    const initialChatBubbles = document.querySelector("#initial-chat-bubbles");
-    const logo = document.querySelector(".logo");
-    let isFirstMessage = true;
-
-    sendButton.addEventListener("click", sendMessage);
-    inputField.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
-
-    // Function to handle initial chat bubble clicks and start the conversation
-    function startConversation(title, message) {
-        if (isFirstMessage) {
-            chatArea.innerHTML = "";
-            initialChatBubbles.style.display = "none";
-            if (logo) logo.style.display = "none";
-            isFirstMessage = false;
-        }
-        displayMessage("User", message);
-        inputField.value = message;
-        sendMessage();
-    }
-
-    async function sendMessage() {
-        const userMessage = inputField.value.trim();
-        if (userMessage === "") return;
-
-        if (isFirstMessage) {
-            chatArea.innerHTML = "";
-            initialChatBubbles.style.display = "none";
-            if (logo) logo.style.display = "none";
-            isFirstMessage = false;
-        }
-
-        displayMessage("User", userMessage);
-
-        // Clear input field immediately after sending
-        inputField.value = "";
-
-        try {
-            const response = await fetch("http://localhost:11434/api/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({  // For System prompt / tweak options , Chat VS Oneshot (Ollama.API)[https://github.com/ollama/ollama/blob/main/docs/api.md#show-model-information]
-                    model: "tinyllama", //llama3.1  //gemma2:2b
-                    messages: [
-                        { role: "user", content: userMessage }  
-                    ],
-                    stream: false,
-                    keep_alive: 0  // a duration string (such as "10m" or "24h"),a number in seconds (such as 3600),any negative number which will keep the model loaded in memory (e.g. -1 or "-1m"),'0' which will unload the model immediately after generating a response
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            if (data.done) {
-                displayMessage("Enerzal", data.message.content);
-            } else {
-                displayMessage("Enerzal", "I'm sorry, I couldn't generate a complete response.");
-            }
-
-        } catch (error) {
-            console.error("Error:", error);
-            displayMessage("Enerzal", "Sorry, I encountered an error. Please try again later.");
-        }
-    }
-
-    function displayMessage(sender, message) {
-        const bubble = document.createElement("div");
-        bubble.classList.add("chat-bubble", sender === "User" ? "user" : "assistant");
-        bubble.innerHTML = `<h5>${sender}</h5><p>${message}</p>`;
-        chatArea.appendChild(bubble);
-        chatArea.scrollTop = chatArea.scrollHeight;
-    }
-
-    // Attach click events to initial bubbles (example)
-    document.querySelectorAll("#initial-chat-bubbles .chat-bubble").forEach(bubble => {
-        bubble.addEventListener("click", function() {
-            startConversation(bubble.querySelector("h5").textContent, bubble.querySelector("p").textContent);
-        });
-    });
-});
-
-    </script>
 </body>
 </html>
