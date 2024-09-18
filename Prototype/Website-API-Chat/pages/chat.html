@@ -54,30 +54,31 @@
             <div class="col-md-10 d-flex flex-column">
                 <!-- Logo at the Top -->
                 <div class="my-4 text-center">
-                    <img src="/assests/logo.jpg" alt="Enerzal Logo" class="logo" style="width: 100px;">
+                    <img src="/assests/logo.jpg" alt="Enerzal Logo" class="logo">
                 </div>
 
-                <!-- Chat Bubbles Section -->
-                <div class="chat-bubbles flex-grow-1 overflow-auto p-4">
-                    <!-- Bubble 1 -->
-                    <div class="chat-bubble shadow-sm bg-white p-4 mx-2 rounded text-center mb-3" style="width: 250px;">
+                <!-- Initial Chat Bubbles Section -->
+                <div id="initial-chat-bubbles" class="d-flex justify-content-between mb-3">
+                    <div class="chat-bubble clickable" onclick="startConversation('Leave Policies', 'Could you explain the company\'s leave policies?')">
                         <h5>Leave Policies</h5>
                         <p>"Could you explain the company's leave policies?"</p>
                     </div>
-                    <!-- Bubble 2 -->
-                    <div class="chat-bubble shadow-sm bg-white p-4 mx-2 rounded text-center mb-3" style="width: 250px;">
+                    <div class="chat-bubble clickable" onclick="startConversation('Technical Issue Resolution', 'What is the standard procedure when an employee encounters a technical issue?')">
                         <h5>Technical Issue Resolution</h5>
                         <p>"What is the standard procedure when an employee encounters a technical issue?"</p>
                     </div>
-                    <!-- Bubble 3 -->
-                    <div class="chat-bubble shadow-sm bg-white p-4 mx-2 rounded text-center mb-3" style="width: 250px;">
+                    <div class="chat-bubble clickable" onclick="startConversation('Celebration of Milestones', 'How does the company celebrate major milestones?')">
                         <h5>Celebration of Milestones</h5>
                         <p>"How does the company celebrate major milestones?"</p>
                     </div>
                 </div>
 
+                <!-- Chat Bubbles Section -->
+                <div id="chat-bubbles" class="chat-bubbles flex-grow-1 overflow-auto p-4">
+                </div>
+
                 <!-- Chat Input Section -->
-                <div class="chat-input bg-light p-3">
+                <div class="chat-input">
                     <div class="container">
                         <div class="d-flex">
                             <input type="text" class="form-control me-3" placeholder="Message ENERZAL">
@@ -89,6 +90,101 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inputField = document.querySelector(".chat-input input");
+    const sendButton = document.querySelector(".chat-input button");
+    const chatArea = document.querySelector("#chat-bubbles");
+    const initialChatBubbles = document.querySelector("#initial-chat-bubbles");
+    const logo = document.querySelector(".logo");
+    let isFirstMessage = true;
+
+    sendButton.addEventListener("click", sendMessage);
+    inputField.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    // Function to handle initial chat bubble clicks and start the conversation
+    function startConversation(title, message) {
+        if (isFirstMessage) {
+            chatArea.innerHTML = "";
+            initialChatBubbles.style.display = "none";
+            if (logo) logo.style.display = "none";
+            isFirstMessage = false;
+        }
+        displayMessage("User", message);
+        inputField.value = message;
+        sendMessage();
+    }
+
+    async function sendMessage() {
+        const userMessage = inputField.value.trim();
+        if (userMessage === "") return;
+
+        if (isFirstMessage) {
+            chatArea.innerHTML = "";
+            initialChatBubbles.style.display = "none";
+            if (logo) logo.style.display = "none";
+            isFirstMessage = false;
+        }
+
+        displayMessage("User", userMessage);
+
+        // Clear input field immediately after sending
+        inputField.value = "";
+
+        try {
+            const response = await fetch("http://localhost:11434/api/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "gemma2:2b", //llama3.1  
+                    messages: [
+                        { role: "user", content: userMessage }
+                    ],
+                    stream: false,
+                    keep_alive: 0  // a duration string (such as "10m" or "24h"),a number in seconds (such as 3600),any negative number which will keep the model loaded in memory (e.g. -1 or "-1m"),'0' which will unload the model immediately after generating a response
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.done) {
+                displayMessage("Enerzal", data.message.content);
+            } else {
+                displayMessage("Enerzal", "I'm sorry, I couldn't generate a complete response.");
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            displayMessage("Enerzal", "Sorry, I encountered an error. Please try again later.");
+        }
+    }
+
+    function displayMessage(sender, message) {
+        const bubble = document.createElement("div");
+        bubble.classList.add("chat-bubble", sender === "User" ? "user" : "assistant");
+        bubble.innerHTML = `<h5>${sender}</h5><p>${message}</p>`;
+        chatArea.appendChild(bubble);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    // Attach click events to initial bubbles (example)
+    document.querySelectorAll("#initial-chat-bubbles .chat-bubble").forEach(bubble => {
+        bubble.addEventListener("click", function() {
+            startConversation(bubble.querySelector("h5").textContent, bubble.querySelector("p").textContent);
+        });
+    });
+});
+
+    </script>
 </body>
 </html>
