@@ -51,3 +51,49 @@ html, body {
 .features-section {
     padding: 3rem 1rem;
 }
+/* Styling the sidebar */
+.sidebar-item {
+    height: 50px;
+    margin-bottom: 15px;
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+/* Styling the chat bubbles */
+.chat-bubble {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.chat-bubbles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-height: calc(100vh - 180px); /* Ensures chat bubbles don't take too much space */
+    overflow-y: auto;
+    padding-bottom: 20px;
+     /* Leaves room for the input box */
+     
+}
+
+
+/* Chat input section */
+.chat-input {
+    border-top: 1px solid #dee2e6;
+    position: sticky;
+    bottom: 0;
+    margin-top: auto;
+}
+
+.logo {
+    width: 80px;
+}
+
+/* Ensures no scrolling is necessary for the input field */
+body {
+    overflow: hidden;
+}
