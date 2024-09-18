@@ -141,10 +141,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
+                body: JSON.stringify({  // For System prompt / tweak options , Chat VS Oneshot (Ollama.API)[https://github.com/ollama/ollama/blob/main/docs/api.md#show-model-information]
                     model: "gemma2:2b", //llama3.1  
                     messages: [
-                        { role: "user", content: userMessage }
+                        { role: "user", content: userMessage }  
                     ],
                     stream: false,
                     keep_alive: 0  // a duration string (such as "10m" or "24h"),a number in seconds (such as 3600),any negative number which will keep the model loaded in memory (e.g. -1 or "-1m"),'0' which will unload the model immediately after generating a response
