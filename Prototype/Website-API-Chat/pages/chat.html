@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({  // For System prompt / tweak options , Chat VS Oneshot (Ollama.API)[https://github.com/ollama/ollama/blob/main/docs/api.md#show-model-information]
-                    model: "tinyllama", //llama3.1  //gemma2:2b
+                    model: "gemma2:2b", //llama3.1  //tinyllama
                     messages: [
                         { role: "user", content: userMessage }  
                     ],
