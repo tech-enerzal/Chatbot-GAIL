@@ -60,17 +60,14 @@ document.addEventListener('DOMContentLoaded', function() {
             chatBubbles.scrollTop = chatBubbles.scrollHeight; // Scroll to bottom
     
             try {
-                // Fetch response from the API with streaming enabled
-                const response = await fetch("http://localhost:11434/api/chat", {
+                // Fetch the response from the Flask backend
+                const response = await fetch("http://localhost:5000/api/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "gemma2:2b", // Adjust model as needed
-                        messages: conversationHistory, // Send conversation history
-                        stream: true,
-                        keep_alive: 0
+                        messages: conversationHistory // Send conversation history only
                     })
                 });
     
@@ -83,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 assistantBubble.className = 'chat-bubble chat-bubble-assistant shadow-sm';
                 chatBubbles.appendChild(assistantBubble);
     
-                // Read the streamed response
+                // Read and process the streamed response
                 const reader = response.body.getReader();
                 let decoder = new TextDecoder();
                 let assistantMessage = '';
@@ -92,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const { done, value } = await reader.read();
                     if (done) break; // Stream finished
     
-                    // Decode the chunk and parse it as JSON
+                    // Decode the chunk
                     const chunk = decoder.decode(value);
                     const jsonChunks = chunk.split('\n'); // Handle chunked JSON lines
     
@@ -115,11 +112,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
                     chatBubbles.scrollTop = chatBubbles.scrollHeight; // Scroll to bottom as content comes in
                 }
-
+    
                 // Final conversion of the full assistant message once streaming is done
                 const finalAssistantMessageHTML = marked.parse(assistantMessage);
                 assistantBubble.innerHTML = `<p>${finalAssistantMessageHTML}</p>`;
-
     
                 // Add the assistant's message to the conversation history
                 conversationHistory.push({ role: "assistant", content: assistantMessage });
@@ -137,5 +133,5 @@ document.addEventListener('DOMContentLoaded', function() {
             input.disabled = false;
             chatBubbles.scrollTop = chatBubbles.scrollHeight; // Scroll to bottom
         }
-    }    
+    }  
 });
