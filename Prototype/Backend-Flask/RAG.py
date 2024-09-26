@@ -19,45 +19,21 @@ warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Initialize embedding function
-logging.info("Initializing embedding function...")
+logging.debug("Initializing embedding function...")
 embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 logging.info("Embedding function initialized.")
 
 # Load FAISS vector stores
-logging.info("Loading FAISS vector stores...")
+logging.debug("Loading FAISS vector stores...")
 faiss_Full_HR = FAISS.load_local("Prototype/Backend-Flask/Database/HR/Vector/Full_HR", embedding_function, allow_dangerous_deserialization=True)
 faiss_QA_HR = FAISS.load_local("Prototype/Backend-Flask/Database/HR/Vector/QA_HR", embedding_function, allow_dangerous_deserialization=True)
 logging.info("FAISS vector stores loaded.")
 
 # Initialize the ranker
-logging.info("Initializing the ranker...")
+logging.debug("Initializing the ranker...")
 ranker = Ranker(model_name="rank-T5-flan", cache_dir="/Temp")
 logging.info("Ranker initialized.")
 
-# def construct_prompt(messages, context):
-#     """
-#     Constructs a prompt from provided messages and context.
-#     """
-#     logging.info("Constructing prompt...")
-#     # Build the conversation history from messages
-#     conversation = ""
-#     for message in messages:
-#         role = message.get('role', '')
-#         content = message.get('content', '')
-#         if role == 'user':
-#             conversation += f"\nUser: {content}"
-#         elif role == 'assistant':
-#             conversation += f"\nAssistant: {content}"
-#     # Include the context
-#     prompt = f"""
-# Context:
-# {context}
-
-# Conversation:{conversation}
-
-# Assistant:"""
-#     logging.info("Prompt constructed.")
-#     return prompt.strip()
 
 def generate_stream(payload):
     logging.info("Starting generate_stream...")
@@ -68,7 +44,7 @@ def generate_stream(payload):
     temperature = options.get('temperature', 0.8)
     max_tokens = options.get('num_predict',-1 )
     stream = payload.get('stream', True)
-    logging.info(f"Model: {model}, Temperature: {temperature}, Max Tokens: {max_tokens}, Stream: {stream}")
+    logging.debug(f"Model: {model}, Temperature: {temperature}, Max Tokens: {max_tokens}, Stream: {stream}")
 
     # Process messages to get user question and chat history
     if not messages or not isinstance(messages, list):
@@ -77,7 +53,7 @@ def generate_stream(payload):
 
     # Extract the user's latest message
     user_message = messages[-1].get('content', '')
-    logging.info(f"User message: {user_message}")
+    logging.debug(f"User message: {user_message}")
     # Build chat history (excluding the last message)
     chat_history = messages[:-1]
 
@@ -112,7 +88,7 @@ Answer in the following format:
 
 "Database required: Yes" or "Database required: No"
 """
-        logging.info(f"Self-query prompt: {self_query_prompt}")
+        logging.debug(f"Self-query prompt: {self_query_prompt}")
 
         # Call the gemma2:2b model API
         # Prepare payload for the self-query
@@ -130,14 +106,14 @@ Answer in the following format:
             'stream': False,  # Self-query does not need streaming
             'keep_alive': 0
         }
-        logging.info(f"Self-query model payload: {self_query_model_payload}")
+        logging.debug(f"Self-query model payload: {self_query_model_payload}")
 
         # Make the API call
         logging.info(f"Making self-query API call to {self_query_model_api_url}")
         self_query_response = requests.post(self_query_model_api_url, json=self_query_model_payload)
         self_query_response.raise_for_status()
         self_query_data = self_query_response.json()
-        logging.info(f"Self-query response data: {self_query_data}")
+        logging.debug(f"Self-query response data: {self_query_data}")
 
         # Parse the response
         if 'message' in self_query_data:
@@ -157,7 +133,7 @@ Answer in the following format:
         else:
             logging.error(f"No message or messages key found in response: {self_query_data}")
             raise ValueError(f'No message or messages key found in response: {self_query_data}')
-        logging.info(f"Assistant reply from self-query: {assistant_reply}")
+        logging.debug(f"Assistant reply from self-query: {assistant_reply}")
 
         # Expected format: "Database required: Yes" or "Database required: No"
 
@@ -189,18 +165,18 @@ Answer in the following format:
             logging.info("Step 3: Querying the full HR dataset.")
             k_full = 10  # Number of documents to retrieve
             full_hr_candidates = faiss_Full_HR.similarity_search(user_message, k=k_full)
-            logging.info(f"Retrieved {len(full_hr_candidates)} documents from full HR dataset.")
+            logging.debug(f"Retrieved {len(full_hr_candidates)} documents from full HR dataset.")
 
             # Step 4: Query the QA of the top 2 selected Sections from Full HR
             logging.info("Step 4: Querying the QA of the top 2 selected sections from Full HR.")
             top_sections = full_hr_candidates[:3]
             section_names = [doc.metadata.get('section_name') for doc in top_sections]
-            logging.info(f"Top section names: {section_names}")
+            logging.debug(f"Top section names: {section_names}")
 
             # Retrieve related FAQs from faiss_QA_HR
             qa_candidates = []
             for section_name in section_names:
-                logging.info(f"Querying FAQs for section: {section_name}")
+                logging.debug(f"Querying FAQs for section: {section_name}")
                 # Use the 'filter' parameter in FAISS similarity_search
                 k_qa = 10
                 qa_results = faiss_QA_HR.similarity_search(
@@ -209,8 +185,8 @@ Answer in the following format:
                     filter={'section_name': section_name}
                 )
                 qa_candidates.extend(qa_results)
-                logging.info(f"Retrieved {len(qa_results)} FAQs for section {section_name}")
-                logging.info(f"Retrieved {qa_results} FAQs for section {section_name}")
+                logging.debug(f"Retrieved {len(qa_results)} FAQs for section {section_name}")
+                logging.debug(f"Retrieved {qa_results} FAQs for section {section_name}")
 
             # Step 5: Select any related FAQ to user query
             logging.info("Step 5: Re-ranking the QA passages.")
@@ -220,7 +196,7 @@ Answer in the following format:
                 'text': doc.page_content,
                 'meta': doc.metadata
             } for doc in qa_candidates]
-            logging.info(f"Total QA passages for re-ranking: {len(qa_passages)}")
+            logging.debug(f"Total QA passages for re-ranking: {len(qa_passages)}")
 
             rerank_request = RerankRequest(query=user_message, passages=qa_passages)
             reranked_qa_results = ranker.rerank(rerank_request)
@@ -228,7 +204,7 @@ Answer in the following format:
 
             # Select top FAQs
             top_faqs = reranked_qa_results[:5]
-            logging.info(f"Selected top {len(top_faqs)} FAQs.")
+            logging.debug(f"Selected top {len(top_faqs)} FAQs.")
 
             # Step 6: Combine this and modify messages
             logging.info("Step 6: Preparing context and modifying messages.")
@@ -237,14 +213,14 @@ Answer in the following format:
             context_faqs = '\n\n'.join([faq['text'] for faq in top_faqs])
 
             context = f"Sections:\n{context_sections}\n\nFAQs:\n{context_faqs}"
-            logging.info("Context prepared.")
+            logging.debug("Context prepared.")
 
             # Insert system message with context before the last user message
             messages.insert(-1, {
                 'role': 'system',
                 'content': f'Using the provided context from the database for Tech Enerzal to answer the user query.\nContext="{context}"'
             })
-            logging.info("Inserted system message with context into messages.")
+            logging.debug("Inserted system message with context into messages.")
 
         else:
             logging.info("Database is not required. Proceeding without context.")
@@ -264,11 +240,11 @@ Answer in the following format:
             'stream': stream,
             'keep_alive': 0
         }
-        logging.info(f"Model API payload prepared with messages.")
+        logging.debug(f"Model API payload prepared with messages.")
 
         # Function to stream the response from the model API
         def stream_model_response():
-            logging.info(f"Making model API call to {model_api_url}")
+            logging.debug(f"Making model API call to {model_api_url}")
             with requests.post(model_api_url, json=model_payload, stream=True) as response:
                 response.raise_for_status()
                 logging.info("Model API call successful. Streaming response...")
@@ -278,7 +254,7 @@ Answer in the following format:
                         # Assuming the API returns JSON lines with 'message' containing 'role' and 'content'
                         try:
                             data = json.loads(decoded_line)
-                            logging.info(f"Received JSON data: {data}")
+                            logging.debug(f"Received JSON data: {data}")
                     
                             # Accessing nested 'message' object
                             message = data.get('message', {})
@@ -288,9 +264,9 @@ Answer in the following format:
                             # Only yield user and assistant messages
                             if role in ['assistant', 'user']:
                                 yield content + '\n'
-                                logging.info(f"Yielded content chunk: {content}")
+                                logging.debug(f"Yielded content chunk: {content}")
                             else:
-                                logging.info(f"Ignored message with role: {role}")
+                                logging.debug(f"Ignored message with role: {role}")
                         
                         except json.JSONDecodeError:
                             # If the line is not valid JSON, log it

@@ -89,7 +89,7 @@ def stream_response(generator_function):
     try:
         for response_chunk in generator_function:
             yield response_chunk + '\n'
-            logging.info(response_chunk)
+            logging.debug(response_chunk)
     except Exception as e:
         error_message = json.dumps({"error": f"Failed to fetch the assistant response: {str(e)}"})
         logging.exception("Error in stream_response")
@@ -102,7 +102,8 @@ def decide_model(conversation_history):
     #     return "llama3.1:8b"  # Some large model for long conversations
     # else:
     #     return "gemma2:2b"  # Some small model for short conversations
-    return "llama3.1:8b"  # Large model for heavy lifting (e.g., document parsing)
+    #return "llama3.1:8b"  # Large model for heavy lifting (e.g., document parsing)
+    return "gemma2:27b" 
 
 # Chatbot endpoint for handling messages and file content
 @app.route('/api/chat', methods=['POST'])
