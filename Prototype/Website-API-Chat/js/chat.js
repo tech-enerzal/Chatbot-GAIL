@@ -195,7 +195,7 @@ Remember, your goal is to make every employee interaction positive and helpful, 
                     // Notify user that the file is uploaded successfully
                     const fileSuccessBubble = document.createElement('div');
                     fileSuccessBubble.className = 'chat-bubble chat-bubble-system shadow-sm';
-                    fileSuccessBubble.innerHTML = `<p>File "${fileName}" uploaded successfully and ready to be used.</p>`;
+                    fileSuccessBubble.innerHTML = `<p>File <b>"${fileName}"</b> uploaded successfully and ready to be used.</p>`;
                     chatBubbles.appendChild(fileSuccessBubble);
 
                     // Re-enable input for further queries

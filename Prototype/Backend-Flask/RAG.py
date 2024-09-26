@@ -6,8 +6,8 @@ import warnings
 import requests
 
 # FAISS imports
-from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_community.vectorstores import FAISS
 
 # Ranker (assuming you have a Ranker class)
 from flashrank import Ranker, RerankRequest
@@ -42,7 +42,7 @@ def generate_stream(payload):
     messages = payload.get('messages', [])
     options = payload.get('options', {})
     temperature = options.get('temperature', 0.8)
-    max_tokens = options.get('num_predict',-1 )
+    max_tokens = options.get('num_predict',int(-1) )
     stream = payload.get('stream', True)
     logging.debug(f"Model: {model}, Temperature: {temperature}, Max Tokens: {max_tokens}, Stream: {stream}")
 
@@ -101,7 +101,7 @@ Answer in the following format:
             ],
             'options': {
                 'temperature': 0.0,
-                "num_predict": 15,
+                "num_predict": int(15),
             },
             'stream': False,  # Self-query does not need streaming
             'keep_alive': 0
@@ -168,8 +168,8 @@ Answer in the following format:
             logging.debug(f"Retrieved {len(full_hr_candidates)} documents from full HR dataset.")
 
             # Step 4: Query the QA of the top 2 selected Sections from Full HR
-            logging.info("Step 4: Querying the QA of the top 2 selected sections from Full HR.")
-            top_sections = full_hr_candidates[:3]
+            logging.info("Step 4: Querying the QA of the top 1 selected sections from Full HR.")
+            top_sections = full_hr_candidates[:1]
             section_names = [doc.metadata.get('section_name') for doc in top_sections]
             logging.debug(f"Top section names: {section_names}")
 
@@ -203,7 +203,7 @@ Answer in the following format:
             logging.info("Reranked QA results obtained.")
 
             # Select top FAQs
-            top_faqs = reranked_qa_results[:5]
+            top_faqs = reranked_qa_results[:3]
             logging.debug(f"Selected top {len(top_faqs)} FAQs.")
 
             # Step 6: Combine this and modify messages
@@ -237,7 +237,7 @@ Answer in the following format:
                 'temperature': temperature,
                 "num_predict": max_tokens,
             },
-            'stream': stream,
+            # 'stream': stream,
             'keep_alive': 0
         }
         logging.debug(f"Model API payload prepared with messages.")
