@@ -125,7 +125,8 @@ def chat():
             'messages': messages,
             'options': {
                 "temperature": 0.8,
-                "num_predict": 100,
+                "num_predict": -1,
+                "num_ctx":8192,
             },
             'stream': True,
             'keep_alive': 0

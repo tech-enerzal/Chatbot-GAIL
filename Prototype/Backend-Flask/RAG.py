@@ -42,7 +42,8 @@ def generate_stream(payload):
     messages = payload.get('messages', [])
     options = payload.get('options', {})
     temperature = options.get('temperature', 0.8)
-    max_tokens = options.get('num_predict',int(-1) )
+    max_tokens = options.get('num_predict',int(4096) )
+    context_length = options.get('num_ctx',int(8192) )
     stream = payload.get('stream', True)
     logging.debug(f"Model: {model}, Temperature: {temperature}, Max Tokens: {max_tokens}, Stream: {stream}")
 
@@ -236,6 +237,7 @@ Answer in the following format:
             'options': {
                 'temperature': temperature,
                 "num_predict": max_tokens,
+                "num_ctx":context_length,
             },
             # 'stream': stream,
             'keep_alive': 0
