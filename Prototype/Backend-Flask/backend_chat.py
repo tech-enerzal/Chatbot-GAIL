@@ -2,15 +2,26 @@ from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
 import requests
 import os
+import json
 from werkzeug.utils import secure_filename
 import PyPDF2
 import docx
+import atexit
+import shutil
+import logging
+
+# Import the RAG module
+import RAG
 
 app = Flask(__name__)
 CORS(app)
 
+# Initialize logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 # Directory to store uploaded files temporarily
-UPLOAD_FOLDER = '/Temp'
+UPLOAD_FOLDER = 'Prototype/Backend-Flask/Temp'  # Use a relative path
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -38,6 +49,9 @@ def read_file_content(file_path, file_type):
 # Endpoint to handle file uploads
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
+
+    logging.info("Received file upload request.")
+
     # Check if the post request has the file part
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -51,6 +65,9 @@ def upload_file():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
+        # Ensure the upload directory exists
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
@@ -67,17 +84,16 @@ def upload_file():
     return jsonify({'error': 'File type not allowed'}), 400
 
 # Stream the response from the chatbot API
-def stream_response(url, payload):
+# Stream the response from the chatbot API
+def stream_response(generator_function):
     try:
-        with requests.post(url, json=payload, stream=True) as r:
-            r.raise_for_status()
-            for line in r.iter_lines():
-                if line:
-                    # Yield the streamed response in real-time to the frontend
-                    yield line.decode('utf-8') + '\n'
-
+        for response_chunk in generator_function:
+            yield response_chunk + '\n'
+            logging.info(response_chunk)
     except Exception as e:
-        yield jsonify({"error": f"Failed to fetch the assistant response: {str(e)}"})
+        error_message = json.dumps({"error": f"Failed to fetch the assistant response: {str(e)}"})
+        logging.exception("Error in stream_response")
+        yield error_message + '\n'
 
 # Function to decide the model based on some logic
 def decide_model(conversation_history):
@@ -91,34 +107,67 @@ def decide_model(conversation_history):
 # Chatbot endpoint for handling messages and file content
 @app.route('/api/chat', methods=['POST'])
 def chat():
+
     try:
-        # Get the conversation history and other details from the request
+        logging.info("Received chat request.")
         data = request.json
         messages = data.get('messages')
+        if not messages or not isinstance(messages, list):
+            logging.error("Invalid messages format.")
+            return jsonify({'error': 'Invalid messages format'}), 400
 
-        # Decide the model on the server side
         model = decide_model(messages)
+        logging.info(f"Model selected: {model}")
 
-        # Prepare payload for the chatbot API
         payload = {
-            'model': model,  # Chosen model
+            'model': model,
             'messages': messages,
             'options': {
                 "temperature": 0.8,
                 "num_predict": 100,
             },
-            'stream': True,  # Enable streaming
+            'stream': True,
             'keep_alive': 0
         }
+        logging.info("Payload prepared for RAG.generate_stream.")
 
-        # Stream the response to the frontend
-        return Response(stream_response('http://localhost:11434/api/chat', payload),
-                        content_type='application/json')
+        def generate_response():
+            response_generator = RAG.generate_stream(payload)
+            for chunk in response_generator:
+                yield chunk
+
+        logging.info("Starting to stream response to frontend.")
+        return Response(stream_response(generate_response()), content_type='application/json')
 
     except Exception as e:
-        return jsonify({'error': 'Failed to fetch the assistant response.'}), 500
+        logging.exception("Failed to fetch the assistant response.")
+        return jsonify({'error': f'Failed to fetch the assistant response: {str(e)}'}), 500
+
+# Function to clean up the upload folder when the server stops
+def cleanup_upload_folder():
+    if os.path.exists(app.config['UPLOAD_FOLDER']):
+        # List all files and directories in the upload folder
+        for filename in os.listdir(app.config['UPLOAD_FOLDER']):
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # Check if the file is not 'Test1.txt'
+            if filename != 'Test1.txt':
+                try:
+                    # If it's a file or a symbolic link, delete it
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.remove(file_path)
+                    # If it's a directory, delete it and all its contents
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    print(f'Failed to delete {file_path}. Reason: {e}')
+        print("Upload folder cleaned up, 'Test1.txt' preserved.")
+    else:
+        print("Upload folder does not exist.")
+
+atexit.register(cleanup_upload_folder)
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
+    logging.info("Starting Flask app...")
     app.run(host='0.0.0.0', port=5000, debug=True)

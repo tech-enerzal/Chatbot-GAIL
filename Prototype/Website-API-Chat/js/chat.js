@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 Guidelines to follow for every response:
 - Always maintain a positive and friendly tone.
+
 - Offer help proactively by suggesting next steps or additional resources.
 - Be concise but detailed enough to ensure the employee gets all the information they need.
 - When responding to questions or queries, prioritize clarity and accuracy.
@@ -57,7 +58,8 @@ Guidelines to follow for every response:
 
 Remember, your goal is to make every employee interaction positive and helpful, ensuring that they feel supported by Tech Enerzal.
 `
- 
+// #- Use Markdown when generating responses
+
  // Add the system message to the conversation history
  conversationHistory.push({ role: "system", content: initialSystemMessage });
 
@@ -117,22 +119,18 @@ Remember, your goal is to make every employee interaction positive and helpful, 
 
                     // Decode the chunk
                     const chunk = decoder.decode(value);
-                    const jsonChunks = chunk.split('\n'); // Handle chunked JSON lines
+                    const lines = chunk.split('\n'); // Split on newline characters
 
-                    jsonChunks.forEach(jsonChunk => {
-                        if (jsonChunk.trim()) {
-                            const data = JSON.parse(jsonChunk);
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            // Append the line to the assistant message
+                            assistantMessage += line;
 
-                            if (data.message && data.message.content) {
-                                // Append new content to the assistant message
-                                assistantMessage += data.message.content;
+                            // Use marked.js to convert Markdown to HTML
+                            const assistantMessageHTML = marked.parse(assistantMessage);
 
-                                // Use marked.js to convert Markdown to HTML
-                                const assistantMessageHTML = marked.parse(assistantMessage);
-
-                                // Update the assistant bubble with the parsed content
-                                assistantBubble.innerHTML = `<p>${assistantMessageHTML}</p>`;
-                            }
+                            // Update the assistant bubble with the parsed content
+                            assistantBubble.innerHTML = `<p>${assistantMessageHTML}</p>`;
                         }
                     });
 
