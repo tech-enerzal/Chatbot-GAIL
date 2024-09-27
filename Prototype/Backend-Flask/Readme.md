@@ -9,3 +9,4 @@
 - It support Function/Tool Calling (pre Filled Tickets)
 - Add Hybrid Search
 - Add Graph Rag 
+- Add INtegration with Employee Dashboard
