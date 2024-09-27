@@ -79,9 +79,9 @@ Context:
 
 3. **Company Events & Updates:** Keep employees informed about upcoming company events, milestones, and internal updates. Share details about events in a friendly, enthusiastic tone to keep the company culture vibrant and engaging.
 
-4. **Document Summarization and Querying:** Enerzal also helps employees by summarizing documents (PDF, DOCX, TXT) and answering queries based on the content of uploaded documents. For document summaries, be concise and informative, extracting the key points while maintaining clarity. When answering queries, provide clear and accurate answers based on the document content, making sure to offer further assistance if needed.
+4. **Uploaded Document Summarization and Querying:** Enerzal also helps employees by summarizing documents (PDF, DOCX, TXT) and answering queries based on the content of uploaded documents. For document summaries, be concise and informative, extracting the key points while maintaining clarity. When answering queries, provide clear and accurate answers based on the document content, making sure to offer further assistance if needed.
 
-Determine whether the assistant needs to access an external database to provide an accurate answer.
+Determine whether the assistant needs to access an external database for only  HR , IT , Company events to provide an accurate answer. For Uploaded Document's and casual talks Default to NO 
 
 Answer with 'Yes' if the database is required, or 'No' if the database is not required.
 
@@ -169,8 +169,8 @@ Answer in the following format:
             logging.debug(f"Retrieved {len(full_hr_candidates)} documents from full HR dataset.")
 
             # Step 4: Query the QA of the top 2 selected Sections from Full HR
-            logging.info("Step 4: Querying the QA of the top 1 selected sections from Full HR.")
-            top_sections = full_hr_candidates[:1]
+            logging.info("Step 4: Querying the QA of the top 2 selected sections from Full HR.")
+            top_sections = full_hr_candidates[:2]
             section_names = [doc.metadata.get('section_name') for doc in top_sections]
             logging.debug(f"Top section names: {section_names}")
 
@@ -201,11 +201,11 @@ Answer in the following format:
 
             rerank_request = RerankRequest(query=user_message, passages=qa_passages)
             reranked_qa_results = ranker.rerank(rerank_request)
-            logging.info("Reranked QA results obtained.")
+            logging.debug("Reranked QA results obtained.")
 
             # Select top FAQs
             top_faqs = reranked_qa_results[:3]
-            logging.debug(f"Selected top {len(top_faqs)} FAQs.")
+            logging.info(f"Selected top {len(top_faqs)} FAQs.")
 
             # Step 6: Combine this and modify messages
             logging.info("Step 6: Preparing context and modifying messages.")

@@ -63,6 +63,14 @@ Remember, your goal is to make every employee interaction positive and helpful, 
  // Add the system message to the conversation history
  conversationHistory.push({ role: "system", content: initialSystemMessage });
 
+ // Function to prune conversation history to last 3 user/assistant interactions, excluding the system message
+function pruneConversationHistory() {
+    // Exclude the initial system message when pruning
+    if (conversationHistory.length > 4) { // 1 system message + last 3 entries
+        conversationHistory = [conversationHistory[0], ...conversationHistory.slice(-3)];
+    }
+}
+
     async function sendMessage(message) {
         if (message) {
             // Remove initial bubbles and logo
@@ -81,6 +89,9 @@ Remember, your goal is to make every employee interaction positive and helpful, 
 
             // Add the user's message to the conversation history
             conversationHistory.push({ role: "user", content: message });
+
+            // Prune conversation history to retain only last 3 messages plus system prompt
+            pruneConversationHistory();
 
             // Clear input and disable it
             input.value = '';
@@ -122,7 +133,7 @@ Remember, your goal is to make every employee interaction positive and helpful, 
                     const lines = chunk.split('\n'); // Split on newline characters
 
                     lines.forEach(line => {
-                        if (line.trim()) {
+                        if (line) {
                             // Append the line to the assistant message
                             assistantMessage += line;
 

@@ -102,8 +102,8 @@ def decide_model(conversation_history):
     #     return "llama3.1:8b"  # Some large model for long conversations
     # else:
     #     return "gemma2:2b"  # Some small model for short conversations
-    return "llama3.1:8b"  # Large model for heavy lifting (e.g., document parsing)
-    #return "gemma2:27b" 
+    #return "llama3.1:8b"  # Large model for heavy lifting (e.g., document parsing)
+    return "gemma2:27b" 
 
 # Chatbot endpoint for handling messages and file content
 @app.route('/api/chat', methods=['POST'])
@@ -126,7 +126,7 @@ def chat():
             'options': {
                 "temperature": 0.8,
                 "num_predict": -1,
-                "num_ctx":8192,
+                #"num_ctx":8192,
             },
             'stream': True,
             'keep_alive': 0
