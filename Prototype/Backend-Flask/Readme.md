@@ -10,3 +10,4 @@
 - Add Hybrid Search
 - Add Graph Rag 
 - Add INtegration with Employee Dashboard
+- Use open Parse
