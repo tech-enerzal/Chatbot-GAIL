@@ -6,7 +6,7 @@
 <h3 style="font-size: 1.6rem; font-weight: bold; color: #000;"><b><i><u>Do not Share Readme / Links</u></i></b></h3>
 
 
-- [Problem Statement](Assets/Smart India Hackathon-1706.pdf)
+- [Problem Statement SIH-24_1706](AAssets/Smart%20India%20Hackathon-1706.pdf)
 
 - [Flowchart](https://lucid.app/lucidchart/29c36844-c506-464a-9385-001027ab9bba/edit?invitationId=inv_99934db6-f262-402c-a471-1f6ab6beda84&page=0_0#)
 
