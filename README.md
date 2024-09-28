@@ -11,3 +11,7 @@
 - [ppt1.5v(TechVortex-Pune)](https://www.canva.com/design/DAGRFIwyeZk/rLH6rZ3lkHXwKtdeLUfpcw/edit)
 
 - [ppt.2v(External-Idea-Submission)](https://docs.google.com/presentation/d/1_qovvei2m0-aIowMtkHm-pklui4FyTSUW89wLNkA5ao/edit#slide=id.p1)
+
+- ![Dashboard](Prototype/Website-API-Chat/assests/Dashboard.png)[Prototype Video (YT)](https://youtu.be/azj_7OdSxcY)
+
+
