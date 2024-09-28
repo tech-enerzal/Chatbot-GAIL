@@ -10,4 +10,5 @@
 - Add Hybrid Search
 - Add Graph Rag 
 - Add INtegration with Employee Dashboard
-- Use open Parse
+- Use [open-parse](https://github.com/Filimoa/open-parse/blob/main/src/cookbooks/quickstart.ipynb) For Advance pdf and docx parsing 
+
