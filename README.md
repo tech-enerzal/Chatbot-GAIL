@@ -22,4 +22,6 @@
 
 - [Prototype Video (YT)](https://youtu.be/azj_7OdSxcY)
 
+- Final SIH Idea [PPT](https://www.canva.com/design/DAGR-YgQ5cA/fDlled7Wxklk5WLDJspGXw/edit?utm_content=DAGR-YgQ5cA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) [PDF](Assets/Tech_Enerzal_SIH_Presentation_1706.pdf)
+
 
