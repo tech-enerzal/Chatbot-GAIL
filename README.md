@@ -1,6 +1,12 @@
 # Chatbot-GAIL
 
-<h2><b><i><u>Do not Share Readme / Links</u></i></b></h2>
+<img src="Assets/ENERZAL_LOGO.jpg" alt="Enerzal Logo" style="width: 50px; height: 50px; margin-right: 10px;" align="left"/> <h2 style="font-size: 1.8rem; font-weight: bold; color: #000;">Tech Enerzal</h2>
+
+
+<h3 style="font-size: 1.6rem; font-weight: bold; color: #000;"><b><i><u>Do not Share Readme / Links</u></i></b></h3>
+
+
+- [Problem Statement](Assets/Smart India Hackathon-1706.pdf)
 
 - [Flowchart](https://lucid.app/lucidchart/29c36844-c506-464a-9385-001027ab9bba/edit?invitationId=inv_99934db6-f262-402c-a471-1f6ab6beda84&page=0_0#)
 
@@ -12,7 +18,7 @@
 
 - [ppt.2v(External-Idea-Submission)](https://docs.google.com/presentation/d/1_qovvei2m0-aIowMtkHm-pklui4FyTSUW89wLNkA5ao/edit#slide=id.p1)
 
-  ![Dashboard](Prototype/Website-API-Chat/assests/Dashboard.png)
+  ![Dashboard](Assets/Dashboard.png)
 
 - [Prototype Video (YT)](https://youtu.be/azj_7OdSxcY)
 
