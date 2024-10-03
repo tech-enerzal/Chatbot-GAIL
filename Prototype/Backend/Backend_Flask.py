@@ -45,7 +45,7 @@ jwt = JWTManager(app)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Directory to store uploaded files temporarily
-UPLOAD_FOLDER = 'Prototype/Backend-Flask/Temp'  # Use a relative path
+UPLOAD_FOLDER = 'Prototype/Backend/Temp'  # Use a relative path
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
