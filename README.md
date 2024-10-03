@@ -24,4 +24,6 @@
 
 - Final SIH Idea [PPT](https://www.canva.com/design/DAGR-YgQ5cA/fDlled7Wxklk5WLDJspGXw/edit?utm_content=DAGR-YgQ5cA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) || [PDF](Assets/Tech_Enerzal_SIH_Presentation_1706.pdf)
 
+- [KPR Intel-GenAI](https://www.canva.com/design/DAGSiRmAhas/MO8FCMAGDbRpIlBbiCzLRg/edit?utm_content=DAGSiRmAhas&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) PPT
+
 
