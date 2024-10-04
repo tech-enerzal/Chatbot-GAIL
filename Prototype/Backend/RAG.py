@@ -25,8 +25,8 @@ logging.info("Embedding function initialized.")
 
 # Load FAISS vector stores
 logging.debug("Loading FAISS vector stores...")
-faiss_Full_HR = FAISS.load_local("Prototype/Backend-Flask/Database/HR/Vector/Full_HR", embedding_function, allow_dangerous_deserialization=True)
-faiss_QA_HR = FAISS.load_local("Prototype/Backend-Flask/Database/HR/Vector/QA_HR", embedding_function, allow_dangerous_deserialization=True)
+faiss_Full_HR = FAISS.load_local("Prototype/Backend/Database/HR/Vector/Full_HR", embedding_function, allow_dangerous_deserialization=True)
+faiss_QA_HR = FAISS.load_local("Prototype/Backend/Database/HR/Vector/QA_HR", embedding_function, allow_dangerous_deserialization=True)
 logging.info("FAISS vector stores loaded.")
 
 # Initialize the ranker
@@ -213,7 +213,10 @@ Answer in the following format:
             context_sections = '\n\n'.join([doc.page_content for doc in top_sections])
             context_faqs = '\n\n'.join([faq['text'] for faq in top_faqs])
 
-            context = f"Sections:\n{context_sections}\n\nFAQs:\n{context_faqs}"
+            # Removed FAQ Integration temperaily
+            # context = f"Sections:\n{context_sections}\n\nFAQs:\n{context_faqs}"
+            context = f"Sections:\n{context_sections}\n"
+
             logging.debug("Context prepared.")
 
             # Insert system message with context before the last user message

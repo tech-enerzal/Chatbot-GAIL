@@ -268,7 +268,7 @@ def cleanup_upload_folder():
         for filename in os.listdir(app.config['UPLOAD_FOLDER']):
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             # Check if the file is not 'Test1.txt'
-            if filename != 'Test1.txt':
+            if filename not in ['Test1.txt', 'Readme.md']:
                 try:
                     # If it's a file or a symbolic link, delete it
                     if os.path.isfile(file_path) or os.path.islink(file_path):
