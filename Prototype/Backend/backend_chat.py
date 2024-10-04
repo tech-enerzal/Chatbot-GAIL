@@ -38,7 +38,7 @@ db = client["KPR_Business_chatbot"]
 users = db["Employee_Credentials"]
 
 # JWT Configuration
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret'
+app.config['JWT_SECRET_KEY'] = 'Enerzal8188'
 jwt = JWTManager(app)
 
 # Initialize logging
