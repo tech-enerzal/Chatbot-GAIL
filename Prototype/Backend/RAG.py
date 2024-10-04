@@ -213,7 +213,10 @@ Answer in the following format:
             context_sections = '\n\n'.join([doc.page_content for doc in top_sections])
             context_faqs = '\n\n'.join([faq['text'] for faq in top_faqs])
 
-            context = f"Sections:\n{context_sections}\n\nFAQs:\n{context_faqs}"
+            # Removed FAQ Integration temperaily
+            # context = f"Sections:\n{context_sections}\n\nFAQs:\n{context_faqs}"
+            context = f"Sections:\n{context_sections}\n"
+
             logging.debug("Context prepared.")
 
             # Insert system message with context before the last user message
